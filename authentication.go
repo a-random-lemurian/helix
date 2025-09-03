@@ -19,7 +19,7 @@ type AuthorizationURLParams struct {
 }
 
 func (c *Client) GetAuthorizationURL(params *AuthorizationURLParams) string {
-	url := AuthBaseURL + "/authorize"
+	url := c.opts.AuthBaseURL + "/authorize"
 	url += "?response_type=" + params.ResponseType
 	url += "&client_id=" + c.opts.ClientID
 	url += "&redirect_uri=" + c.opts.RedirectURI
