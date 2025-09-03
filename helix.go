@@ -21,7 +21,7 @@ const (
 	DefaultAPIBaseURL = "https://api.twitch.tv/helix"
 
 	// AuthBaseURL is the base URL for composing authentication requests.
-	AuthBaseURL = "https://id.twitch.tv/oauth2"
+	DefaultAuthBaseURL = "https://id.twitch.tv/oauth2"
 )
 
 type HTTPClient interface {
@@ -49,6 +49,7 @@ type Options struct {
 	HTTPClient      HTTPClient
 	RateLimitFunc   RateLimitFunc
 	APIBaseURL      string
+	AuthBaseURL     string
 	ExtensionOpts   ExtensionOptions
 }
 
@@ -130,6 +131,10 @@ func NewClientWithContext(ctx context.Context, options *Options) (*Client, error
 
 	if options.APIBaseURL == "" {
 		options.APIBaseURL = DefaultAPIBaseURL
+	}
+
+	if options.AuthBaseURL == "" {
+		options.AuthBaseURL = DefaultAuthBaseURL
 	}
 
 	client := &Client{
@@ -334,7 +339,7 @@ func (c *Client) newJSONRequest(method, url string, data interface{}) (*http.Req
 func (c *Client) getBaseURL(path string) string {
 	for _, authPath := range authPaths {
 		if strings.Contains(path, authPath) {
-			return AuthBaseURL
+			return c.opts.AuthBaseURL
 		}
 	}
 
@@ -470,7 +475,7 @@ func (c *Client) setRequestHeaders(req *http.Request) {
 
 	authType := "Bearer"
 	// Token validation requires different type of Auth
-	if req.URL.String() == AuthBaseURL+authPaths["validate"] {
+	if req.URL.String() == c.opts.AuthBaseURL+authPaths["validate"] {
 		authType = "OAuth"
 	}
 
