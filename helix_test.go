@@ -349,6 +349,8 @@ func TestAutomaticUserTokenRefresh(t *testing.T) {
 		ClientSecret:    "old-client-secret",
 		UserAccessToken: "old-user-token",
 		RefreshToken:    "old-refresh-token",
+		APIBaseURL:      DefaultAPIBaseURL,
+		AuthBaseURL:     DefaultAuthBaseURL,
 	}
 	client := newMockClient(options, func(w http.ResponseWriter, r *http.Request) {
 		if strings.Contains(r.URL.Path, "/oauth2/token") {
@@ -712,6 +714,8 @@ func TestOnUserAccessTokenRefreshed(t *testing.T) {
 		ClientSecret:    "old-client-secret",
 		UserAccessToken: "old-user-token",
 		RefreshToken:    "old-refresh-token",
+		APIBaseURL:      DefaultAPIBaseURL,
+		AuthBaseURL:     DefaultAuthBaseURL,
 	}
 	client := newMockClient(options, func(w http.ResponseWriter, r *http.Request) {
 		if strings.Contains(r.URL.Path, "/oauth2/token") {
